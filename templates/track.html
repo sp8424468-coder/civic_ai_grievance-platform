@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Track Complaint</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.box{
+background:white;
+padding:30px;
+border-radius:10px;
+width:350px;
+text-align:center;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:10px;
+}
+
+button{
+margin-top:15px;
+padding:10px;
+width:100%;
+background:#0077ff;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+#result{
+margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Track Complaint</h2>
+
+<input type="number" id="complaintId" placeholder="Enter Complaint ID">
+
+<button onclick="trackComplaint()">Track</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+async function trackComplaint(){
+
+let id = document.getElementById("complaintId").value
+
+let response = await fetch("/track-complaint/" + id)
+
+let data = await response.json()
+
+if(data.error){
+document.getElementById("result").innerHTML = "Complaint not found"
+}else{
+
+document.getElementById("result").innerHTML = `
+<p><strong>Status:</strong> ${data.status}</p>
+<p><strong>Description:</strong> ${data.description}</p>
+<p><strong>Location:</strong> ${data.latitude} , ${data.longitude}</p>
+`
+}
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Admin Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+padding:40px;
+}
+
+table{
+width:100%;
+background:white;
+border-collapse:collapse;
+}
+
+th,td{
+padding:12px;
+border:1px solid #ddd;
+text-align:left;
+}
+
+th{
+background:#3498db;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Admin Dashboard - Complaints</h2>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Status</th>
+<th>Location</th>
+</tr>
+
+{% for complaint in complaints %}
+
+<tr>
+
+<td>{{ complaint.id }}</td>
+
+<td>{{ complaint.description }}</td>
+
+<td>{{ complaint.status }}</td>
+
+<td>{{ complaint.latitude }}, {{ complaint.longitude }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>
