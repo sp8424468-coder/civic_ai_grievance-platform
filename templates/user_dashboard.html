@@ -1,0 +1,28 @@
+<h2>Welcome {{ user.name }}</h2>
+
+<p>Credit Points: ⭐ {{ user.credit_points }}</p>
+
+<a href="/report">Report Complaint</a>
+<a href="/profile">View Profile</a>
+
+<h3>Your Complaints</h3>
+
+<table border="1">
+
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+
+{% for c in complaints %}
+
+<tr>
+<td>{{ c.id }}</td>
+<td>{{ c.description }}</td>
+<td>{{ c.status }}</td>
+</tr>
+
+{% endfor %}
+
+</table>

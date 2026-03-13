@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Department Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+padding:40px;
+}
+
+form{
+background:white;
+padding:20px;
+margin-bottom:30px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+input,select{
+padding:10px;
+margin-right:10px;
+}
+
+button{
+padding:10px 15px;
+background:#3498db;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+table{
+width:100%;
+background:white;
+border-collapse:collapse;
+}
+
+th,td{
+padding:12px;
+border:1px solid #ddd;
+}
+
+th{
+background:#2c3e50;
+color:white;
+}
+
+.delete{
+background:red;
+padding:6px 10px;
+color:white;
+text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>{{ department }} Department Dashboard</h1>
+
+<h2>Add Employee</h2>
+
+<form action="/add-department-employee" method="POST">
+
+<input type="text" name="name" placeholder="Employee Name" required>
+
+<input type="email" name="email" placeholder="Employee Email" required>
+
+<input type="password" name="password" placeholder="Employee Password" required>
+
+<select name="zone">
+<option>East Zone</option>
+<option>West Zone</option>
+<option>North Zone</option>
+<option>South Zone</option>
+<option>Central Zone</option>
+</select>
+
+<button type="submit">Add Employee</button>
+
+</form>
+
+
+<h2>Department Employees</h2>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Department</th>
+<th>Zone</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for emp in employees %}
+
+<tr>
+
+<td>{{ emp.id }}</td>
+<td>{{ emp.name }}</td>
+<td>{{ emp.department }}</td>
+<td>{{ emp.zone }}</td>
+<td>{{ emp.status }}</td>
+
+<td>
+<a class="delete" href="/delete-employee/{{ emp.id }}">Delete</a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

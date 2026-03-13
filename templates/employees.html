@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Employee Management</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+padding:40px;
+}
+
+form{
+background:white;
+padding:20px;
+margin-bottom:30px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+input, select{
+padding:10px;
+margin-right:10px;
+}
+
+button{
+padding:10px 15px;
+background:#3498db;
+color:white;
+border:none;
+}
+
+table{
+width:100%;
+background:white;
+border-collapse:collapse;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+th,td{
+padding:12px;
+border:1px solid #ddd;
+}
+
+th{
+background:#2c3e50;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Employee Management</h1>
+
+<form action="/add-employee" method="POST">
+
+<input type="text" name="name" placeholder="Employee Name" required>
+
+<select name="department">
+<option>Sanitation Department</option>
+<option>BBMP</option>
+<option>Police Department</option>
+<option>Water Department</option>
+<option>Electricity Department</option>
+</select>
+
+<select name="zone">
+<option>East Zone</option>
+<option>West Zone</option>
+<option>North Zone</option>
+<option>South Zone</option>
+<option>Central Zone</option>
+</select>
+
+<button type="submit">Add Employee</button>
+
+</form>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Department</th>
+<th>Zone</th>
+<th>Status</th>
+</tr>
+
+{% for emp in employees %}
+
+<tr>
+
+<td>{{ emp.id }}</td>
+<td>{{ emp.name }}</td>
+<td>{{ emp.department }}</td>
+<td>{{ emp.zone }}</td>
+<td>{{ emp.status }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>
