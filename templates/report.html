@@ -9,22 +9,51 @@
 body{
 font-family:Arial;
 background:#f4f4f4;
-padding:40px;
+margin:0;
 }
+
+/* Navbar */
+
+.navbar{
+background:#2c3e50;
+color:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.nav-links a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+.profile-icon img{
+width:35px;
+margin-left:20px;
+cursor:pointer;
+}
+
+/* Form Container */
 
 .container{
 background:white;
 padding:30px;
 max-width:500px;
-margin:auto;
+margin:40px auto;
 border-radius:8px;
 box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+label{
+font-weight:bold;
 }
 
 input, textarea{
 width:100%;
 padding:10px;
-margin-top:10px;
+margin-top:8px;
 margin-bottom:20px;
 border:1px solid #ccc;
 border-radius:4px;
@@ -38,11 +67,15 @@ padding:12px;
 width:100%;
 cursor:pointer;
 margin-top:10px;
+border-radius:5px;
+font-size:15px;
 }
 
 button:hover{
 background:#2980b9;
 }
+
+/* Success Box */
 
 .successBox{
 display:none;
@@ -53,11 +86,81 @@ border-radius:8px;
 border-left:5px solid #2ecc71;
 }
 
+.nav-links{
+display:flex;
+align-items:center;
+gap:20px;
+}
+
+.profile-menu{
+position:relative;
+}
+
+.profile-icon{
+width:32px;
+cursor:pointer;
+}
+
+.dropdown{
+display:none;
+position:absolute;
+right:0;
+top:40px;
+background:white;
+border:1px solid #ddd;
+border-radius:6px;
+box-shadow:0 3px 10px rgba(0,0,0,0.2);
+min-width:150px;
+}
+
+.dropdown a{
+display:block;
+padding:10px;
+color:black;
+text-decoration:none;
+}
+
+.dropdown a:hover{
+background:#f2f2f2;
+}
+
 </style>
 
 </head>
 
 <body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">
+<strong>Civic AI</strong>
+</div>
+
+<div class="nav-links">
+
+<a href="/">Home</a>
+<a href="/track">Track Complaint</a>
+
+<div class="profile-menu">
+
+<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" class="profile-icon" onclick="toggleMenu()">
+
+<div id="profileDropdown" class="dropdown">
+
+<a href="/profile">My Profile</a>
+<a href="/logout">Logout</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- REPORT FORM -->
 
 <div class="container">
 
@@ -65,7 +168,7 @@ border-left:5px solid #2ecc71;
 
 <label>Location</label>
 
-<input id="location" placeholder="Click Use My Location" readonly>
+<input id="location" placeholder="Click 'Use My Location'" readonly>
 
 <button onclick="getLocation()">Use My Location</button>
 
@@ -83,7 +186,7 @@ border-left:5px solid #2ecc71;
 <button onclick="submitComplaint()">Submit Complaint</button>
 
 
-<!-- Success Message Box -->
+<!-- Success Message -->
 
 <div id="successBox" class="successBox">
 
@@ -94,7 +197,6 @@ border-left:5px solid #2ecc71;
 <p>Please save this ID to track your complaint.</p>
 
 </div>
-
 
 </div>
 
@@ -169,14 +271,13 @@ let data = await response.json()
 
 if(response.ok){
 
-// Show success box
+// show success message
 document.getElementById("successBox").style.display = "block"
 
-// Show complaint ID
+// show complaint id
 document.getElementById("complaintIdText").innerText = data.complaint_id
 
-
-// Clear form
+// clear form
 document.getElementById("description").value=""
 document.getElementById("photo").value=""
 
@@ -186,7 +287,17 @@ alert(data.error)
 
 }
 
-console.log(data)
+}
+
+function toggleMenu(){
+
+let menu = document.getElementById("profileDropdown")
+
+if(menu.style.display === "block"){
+menu.style.display = "none"
+}else{
+menu.style.display = "block"
+}
 
 }
 

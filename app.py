@@ -173,7 +173,13 @@ def verify_otp():
 
         if record["email"] == email and record["otp"] == user_otp:
 
-            # Save user to database
+            # Check if user already exists
+            existing_user = User.query.filter_by(email=email).first()
+
+            if existing_user:
+                return "User already registered. Please login."
+
+            # Create new user
             user = User(
                 name=record["name"],
                 email=record["email"],
@@ -272,7 +278,15 @@ def profile():
 
     user = User.query.get(session["user_id"])
 
-    return render_template("profile.html", user=user)
+    user_complaints = Complaint.query.filter_by(
+        user_id=session["user_id"]
+    ).all()
+
+    return render_template(
+        "profile.html",
+        user=user,
+        complaints=user_complaints
+    )
 
 @app.route("/verify-complaint/<int:id>")
 def verify_complaint(id):
@@ -521,7 +535,49 @@ def submit_complaint():
 def get_complaints():
     return jsonify(complaints)
 
+@app.route("/profile")
+def user_profile():
 
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user = User.query.get(session["user_id"])
+
+    # get user complaints
+    user_complaints = Complaint.query.filter_by(user_id=user.id).all()
+
+    total_complaints = len(user_complaints)
+
+    resolved = len([c for c in user_complaints if c.status == "Resolved"])
+
+    return render_template(
+        "profile.html",
+        user=user,
+        total_complaints=total_complaints,
+        resolved=resolved,
+        complaints=user_complaints
+    )
+
+@app.route("/resolve-complaint/<int:complaint_id>")
+def resolve_complaint(complaint_id):
+
+    if "admin" not in session:
+        return redirect("/admin")
+
+    complaint = Complaint.query.get(complaint_id)
+
+    if complaint:
+
+        # change complaint status
+        complaint.status = "Resolved"
+
+        # give credit points to user
+        user = User.query.get(complaint.user_id)
+        user.credit_points += 10
+
+        db.session.commit()
+
+    return redirect("/admin-dashboard")
 # ---------------- RUN SERVER ----------------
 if __name__ == "__main__":
     app.run(debug=True)

@@ -18,15 +18,34 @@ padding:0;
 .navbar{
 background:#2c3e50;
 color:white;
-padding:15px;
+padding:15px 30px;
 display:flex;
 justify-content:space-between;
+align-items:center;
+}
+
+.nav-links{
+display:flex;
+align-items:center;
 }
 
 .nav-links a{
 color:white;
 margin-left:20px;
 text-decoration:none;
+font-size:15px;
+}
+
+.nav-links a:hover{
+text-decoration:underline;
+}
+
+/* Profile icon */
+
+.profile-icon img{
+width:35px;
+margin-left:20px;
+cursor:pointer;
 }
 
 /* Hero Section */
@@ -46,6 +65,11 @@ background:white;
 color:#3498db;
 font-size:16px;
 cursor:pointer;
+border-radius:5px;
+}
+
+.hero button:hover{
+background:#ecf0f1;
 }
 
 /* Sections */
@@ -60,6 +84,7 @@ display:flex;
 justify-content:center;
 gap:30px;
 margin-top:20px;
+flex-wrap:wrap;
 }
 
 .card{
@@ -67,6 +92,8 @@ border:1px solid #ccc;
 padding:20px;
 width:250px;
 border-radius:8px;
+background:white;
+box-shadow:0 3px 8px rgba(0,0,0,0.1);
 }
 
 /* Footer */
@@ -95,9 +122,23 @@ margin-top:40px;
 
 <div class="nav-links">
 
-<a href="index.html">Home</a>
-<a href="report.html">Report Issue</a>
-<a href="#">Admin Login</a>
+<a href="/">Home</a>
+
+<a href="/report">Report Issue</a>
+
+<a href="/track">Track Complaint</a>
+
+<a href="/admin">Admin Login</a>
+
+<div class="profile-icon">
+
+<a href="/profile">
+
+<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png">
+
+</a>
+
+</div>
 
 </div>
 
@@ -111,15 +152,13 @@ margin-top:40px;
 
 <p>Report public issues in Bengaluru and help improve city services</p>
 
-<button onclick="window.location.href='/register'">
+<button onclick="window.location.href='/report'">
 Report Complaint
 </button>
 
-
-
-<a href="/track">
-<button>Track Complaint</button>
-</a>
+<button onclick="window.location.href='/track'">
+Track Complaint
+</button>
 
 </div>
 

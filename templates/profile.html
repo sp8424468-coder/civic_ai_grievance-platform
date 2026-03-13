@@ -1,7 +1,97 @@
-<h2>User Profile</h2>
+<!DOCTYPE html>
+<html>
+<head>
 
-<p>Name: {{ user.name }}</p>
-<p>Email: {{ user.email }}</p>
+<title>User Profile</title>
 
-<h3>Credit Points ⭐</h3>
-<p>{{ user.credit_points }}</p>
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+padding:40px;
+}
+
+.profile-card{
+
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+margin-bottom:30px;
+
+}
+
+table{
+
+width:100%;
+border-collapse:collapse;
+background:white;
+
+}
+
+th,td{
+
+padding:12px;
+border:1px solid #ddd;
+
+}
+
+th{
+background:#3498db;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>User Profile</h1>
+
+<div class="profile-card">
+
+<h2>{{ user.name }}</h2>
+
+<p><b>Email:</b> {{ user.email }}</p>
+
+<p><b>Credit Points ⭐:</b> {{ user.credit_points }}</p>
+
+</div>
+
+
+<h2>Your Complaints</h2>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Department</th>
+<th>Priority</th>
+<th>Status</th>
+</tr>
+
+{% for c in complaints %}
+
+<tr>
+
+<td>{{ c.id }}</td>
+
+<td>{{ c.description }}</td>
+
+<td>{{ c.department }}</td>
+
+<td>{{ c.priority }}</td>
+
+<td>{{ c.status }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>
