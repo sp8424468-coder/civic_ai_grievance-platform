@@ -415,13 +415,21 @@ def track_page():
 @app.route("/track-complaint/<int:complaint_id>")
 def track_complaint(complaint_id):
 
-    for complaint in complaints:
-        if complaint["id"] == complaint_id:
-            return jsonify(complaint)
+    complaint = Complaint.query.get(complaint_id)
+
+    if complaint:
+        return jsonify({
+            "id": complaint.id,
+            "description": complaint.description,
+            "category": complaint.category,
+            "department": complaint.department,
+            "priority": complaint.priority,
+            "status": complaint.status,
+            "latitude": complaint.latitude,
+            "longitude": complaint.longitude
+        })
 
     return jsonify({"error": "Complaint not found"}), 404
-
-
 # ---------------- SUBMIT COMPLAINT ----------------
 @app.route("/submit-complaint", methods=["POST"])
 def submit_complaint():
