@@ -233,6 +233,57 @@ font-weight:bold;
 {% endfor %}
 
 </table>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAW4Ki8-_2x1Zyidp9SpI5smvynvDNWd6o&libraries=visualization"></script>
 
+<div id="map" style="height:500px;"></div>
+
+<script>
+
+function initMap(){
+
+    const map = new google.maps.Map(
+        document.getElementById("map"),
+        {
+            zoom:12,
+            center:{lat:12.9716,lng:77.5946}
+        }
+    );
+
+    const points = [
+      {lat: 12.9716, lng: 77.5946},
+      {lat: 12.9716, lng: 77.5946},
+      {lat: 12.9716, lng: 77.5946},
+      {lat: 12.9716, lng: 77.5946},
+      {lat: 12.9716, lng: 77.5946},
+      {lat: 12.9716, lng: 77.5946},
+      {lat: 12.9716, lng: 77.5946},
+      {lat: 12.9716, lng: 77.5946},
+      {lat: 12.9716, lng: 77.5946},
+      {lat: 12.9716, lng: 77.5946}
+    ];
+    // fetch("/complaint-heatmap")
+    // .then(res=>res.json())
+    // .then(data=>{
+
+    //     const heatData = data.map(
+    //         p => new google.maps.LatLng(p.lat,p.lng)
+    //     );
+
+    //     const heatmap = new google.maps.visualization.HeatmapLayer({
+    //         data:heatData,
+    //         radius: 40,
+    //         opacity: 0.8,
+    //         maxIntensity: 10
+    //     });
+
+    //     heatmap.setMap(map);
+
+    // });
+
+}
+
+window.onload = initMap;
+
+</script>
 </body>
 </html>

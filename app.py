@@ -5,7 +5,9 @@ from flask_cors import CORS
 from PIL import Image
 from PIL.ExifTags import TAGS
 import random
-
+from ai.ai_engine import predict_department
+from ai.ai_engine import predict_department, detect_hotspots
+import numpy as np
 app = Flask(__name__)
 CORS(app)
 
@@ -29,6 +31,9 @@ complaints = []
 otp_store = []
 employees = []
 departments = []
+
+# Track complaints by area
+area_complaint_count = {}
 
 # ---------------- EMAIL CONFIG ----------------
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -74,27 +79,48 @@ def has_geotag(image_file):
 
 
 # ---------------- AI COMPLAINT ANALYSIS ----------------
-def analyze_complaint(description):
+def analyze_complaint(description, latitude, longitude):
 
-    text = description.lower()
+    # NLP AI classification
+    department = predict_department(description)
 
-    if "garbage" in text or "waste" in text:
-        return "Sanitation", "Sanitation", "Medium"
+    category = department
 
-    elif "pothole" in text or "road" in text:
-        return "Infrastructure", "Infrastructure", "High"
+    # get all complaint locations
+    complaints = Complaint.query.all()
 
-    elif "water" in text or "leak" in text:
-        return "Water", "Water", "Medium"
+    latitudes = []
+    longitudes = []
 
-    elif "electric" in text or "power" in text:
-        return "Electricity", "Electricity", "High"
+    for c in complaints:
+        if c.latitude and c.longitude:
+            latitudes.append(float(c.latitude))
+            longitudes.append(float(c.longitude))
 
-    elif "fight" in text or "crime" in text:
-        return "Police", "Police", "High"
+    latitudes.append(float(latitude))
+    longitudes.append(float(longitude))
 
-    return "General", "General", "Low"
+    # AI clustering
+    labels = detect_hotspots(latitudes, longitudes)
 
+    cluster_id = labels[-1]
+
+    cluster_size = labels.tolist().count(cluster_id)
+
+    # Priority AI logic
+    if department == "Police":
+        priority = "High"
+
+    elif cluster_size >= 5:
+        priority = "High"
+
+    elif cluster_size >= 3:
+        priority = "Medium"
+
+    else:
+        priority = "Low"
+
+    return category, department, priority
 
 # ---------------- HOME ----------------
 @app.route("/")
@@ -290,6 +316,22 @@ def admin_dashboard():
         active_workers=active_workers
     )
 
+@app.route("/complaint-heatmap")
+def complaint_heatmap():
+
+    complaints = Complaint.query.all()
+
+    data = []
+
+    for c in complaints:
+        if c.latitude and c.longitude:
+            data.append({
+                "lat": float(c.latitude),
+                "lng": float(c.longitude)
+            })
+
+    return jsonify(data)
+
 # ---------------- CREATE DEPARTMENT ----------------
 @app.route("/departments")
 def departments_page():
@@ -451,7 +493,7 @@ def submit_complaint():
         return jsonify({"error": "Photo required"}), 400
 
     # AI complaint analysis
-    category, department, priority = analyze_complaint(description)
+    category, department, priority = analyze_complaint(description, latitude, longitude)
 
     # Create complaint object
     complaint = Complaint(
