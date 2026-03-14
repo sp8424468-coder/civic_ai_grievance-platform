@@ -45,10 +45,14 @@ app.config['MAIL_PASSWORD'] = 'aeokdjqtfvaygmtx'
 mail = Mail(app)
 
 # ---------------- GEO TAG CHECK ----------------
+from PIL import Image
+from PIL.ExifTags import TAGS, GPSTAGS
+
 def has_geotag(image_file):
 
     try:
         image_file.seek(0)
+
         img = Image.open(image_file)
         exif_data = img._getexif()
 
@@ -59,6 +63,7 @@ def has_geotag(image_file):
 
         for tag_id in exif_data:
             tag = TAGS.get(tag_id)
+
             if tag == "GPSInfo":
                 gps_info = exif_data[tag_id]
 
@@ -76,8 +81,6 @@ def has_geotag(image_file):
     except Exception as e:
         print("Geotag error:", e)
         return False
-
-
 # ---------------- AI COMPLAINT ANALYSIS ----------------
 def analyze_complaint(description, latitude, longitude):
 
@@ -505,6 +508,15 @@ def submit_complaint():
 
     if not photo:
         return jsonify({"error": "Photo required"}), 400
+
+
+    # 🔴 Check if photo contains GeoTag
+    if not has_geotag(photo):
+
+        return jsonify({
+            "error": "Please upload a photo with GPS GeoTag enabled."
+        }), 400
+
 
     # AI complaint analysis
     category, department, priority = analyze_complaint(description, latitude, longitude)

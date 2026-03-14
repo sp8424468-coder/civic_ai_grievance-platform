@@ -23,16 +23,53 @@ justify-content:space-between;
 align-items:center;
 }
 
+.nav-links{
+display:flex;
+align-items:center;
+gap:20px;
+}
+
 .nav-links a{
 color:white;
-margin-left:20px;
 text-decoration:none;
 }
 
-.profile-icon img{
-width:35px;
-margin-left:20px;
+.nav-links a:hover{
+text-decoration:underline;
+}
+
+/* Profile Dropdown */
+
+.profile-menu{
+position:relative;
+}
+
+.profile-icon{
+width:32px;
 cursor:pointer;
+}
+
+.dropdown{
+display:none;
+position:absolute;
+right:0;
+top:40px;
+background:white;
+border:1px solid #ddd;
+border-radius:6px;
+box-shadow:0 3px 10px rgba(0,0,0,0.2);
+min-width:150px;
+}
+
+.dropdown a{
+display:block;
+padding:10px;
+color:black;
+text-decoration:none;
+}
+
+.dropdown a:hover{
+background:#f2f2f2;
 }
 
 /* Form Container */
@@ -86,42 +123,11 @@ border-radius:8px;
 border-left:5px solid #2ecc71;
 }
 
-.nav-links{
-display:flex;
-align-items:center;
-gap:20px;
-}
-
-.profile-menu{
-position:relative;
-}
-
-.profile-icon{
-width:32px;
-cursor:pointer;
-}
-
-.dropdown{
-display:none;
-position:absolute;
-right:0;
-top:40px;
-background:white;
-border:1px solid #ddd;
-border-radius:6px;
-box-shadow:0 3px 10px rgba(0,0,0,0.2);
-min-width:150px;
-}
-
-.dropdown a{
-display:block;
-padding:10px;
-color:black;
-text-decoration:none;
-}
-
-.dropdown a:hover{
-background:#f2f2f2;
+.note{
+font-size:13px;
+color:gray;
+margin-top:-15px;
+margin-bottom:15px;
 }
 
 </style>
@@ -145,7 +151,9 @@ background:#f2f2f2;
 
 <div class="profile-menu">
 
-<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" class="profile-icon" onclick="toggleMenu()">
+<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png"
+class="profile-icon"
+onclick="toggleMenu()">
 
 <div id="profileDropdown" class="dropdown">
 
@@ -172,19 +180,19 @@ background:#f2f2f2;
 
 <button onclick="getLocation()">Use My Location</button>
 
-
 <label>Problem Description</label>
 
 <textarea id="description" placeholder="Describe the issue"></textarea>
 
-
 <label>Upload Photo Evidence</label>
 
-<input type="file" id="photo" accept="image/*">
+<input type="file" id="photo" accept=".jpg,.jpeg,.png">
 
+<p class="note">
+Photo must contain GPS GeoTag. Please enable location in camera settings.
+</p>
 
 <button onclick="submitComplaint()">Submit Complaint</button>
-
 
 <!-- Success Message -->
 
@@ -200,12 +208,10 @@ background:#f2f2f2;
 
 </div>
 
-
 <script>
 
 let latitude = null
 let longitude = null
-
 
 function getLocation(){
 
@@ -229,12 +235,10 @@ alert("Geolocation not supported")
 
 }
 
-
 async function submitComplaint(){
 
 let description = document.getElementById("description").value
 let photo = document.getElementById("photo").files[0]
-
 
 if(latitude == null){
 alert("Please click 'Use My Location' first")
@@ -251,7 +255,6 @@ alert("Please upload a photo")
 return
 }
 
-
 let formData = new FormData()
 
 formData.append("description", description)
@@ -259,31 +262,25 @@ formData.append("latitude", latitude)
 formData.append("longitude", longitude)
 formData.append("photo", photo)
 
-
 let response = await fetch("/submit-complaint",{
 method:"POST",
 body:formData
 })
 
-
 let data = await response.json()
-
 
 if(response.ok){
 
-// show success message
 document.getElementById("successBox").style.display = "block"
 
-// show complaint id
 document.getElementById("complaintIdText").innerText = data.complaint_id
 
-// clear form
 document.getElementById("description").value=""
 document.getElementById("photo").value=""
 
 }else{
 
-alert(data.error)
+alert("⚠️ " + data.error)
 
 }
 
